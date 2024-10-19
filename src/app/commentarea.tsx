@@ -33,7 +33,7 @@ export class CommentNode {
 const commentOn = (comment: string, parentId: number) => {
   const video = document.querySelector(".active");
   video?.getAttribute("data-src");
-  fetch("http://localhost:8080/user/comment", {
+  fetch("http://47.97.29.190:8080/user/comment", {
     method: "POST",
     body:
       "type=video&storeId=1&content=" +
