@@ -37,8 +37,8 @@ jobs:
       
     - name: Copy jar file to server
       run: |
-        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/package.json ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/package.json
-        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/.next ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/.next
+        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/package.json ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/
+        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/.next ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/
         echo "Copy file to server completed"
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "export NVM_DIR="/usr/local/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && cd /home/sanjin/video-player-front && npm install && npm run build && npm run start"
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "export NVM_DIR="/usr/local/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && cd /home/sanjin/video-player-front && npm install 2>&1 >> up_log && npm run build && npm run start"
 
