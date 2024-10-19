@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback } from "react";
 
 async function doGetCommentList(): Promise<CommentNode> {
   return (
-    await fetch("localhost:8080/user/comment?type=video&storeId=1")
+    await fetch("http://47.97.29.190:8080/user/comment?type=video&storeId=1")
   ).json();
 }
 
