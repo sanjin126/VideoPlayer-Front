@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,4 +26,19 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm install
     - run: npm run build --if-present
+
+    - name: Write SSH keys
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SERVER_IP }} > ~/.ssh/known_hosts
+      
+    - name: Copy jar file to server
+      run: |
+        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/package.json ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/package.json
+        rsync -avz -e 'ssh -o StrictHostKeyChecking=no' $GITHUB_WORKSPACE/.next ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SSH_USER }}/video-player-front/.next
+        echo "Copy file to server completed"
+        ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "export NVM_DIR="/usr/local/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && cd /home/sanjin/video-player-front && npm install && npm run build && npm run start"
+
